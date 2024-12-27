@@ -2,7 +2,7 @@
 import { PropType } from 'vue';
 import { UserWithSong } from '../types';
 
-const props = defineProps({
+defineProps({
   songs: {
     type: Array as PropType<UserWithSong[]>,
     required: true,
