@@ -14,6 +14,9 @@ defineProps({
   <table class="table">
     <tr>
       <th class="th">
+        №
+      </th>
+      <th class="th">
         Заказчик песни
       </th>
       <th class="th">
@@ -24,7 +27,10 @@ defineProps({
       </th>
     </tr>
 
-    <tr v-for="song in songs">
+    <tr v-for="(song, index) in songs">
+      <td class="td">
+        {{ index + 1 }}
+      </td>
       <td class="td">
         {{ song.user }}
       </td>

@@ -23,10 +23,9 @@ function onTabledCreated(table: SongTable) {
 </script>
 
 <template>
-  <UploadFile @file="onTabledCreated"></UploadFile>
+  <UploadFile  v-if="state.shuffled.length === 0" @file="onTabledCreated" class="no-print"></UploadFile>
   <Table v-if="state.shuffled.length > 0" :songs="state.shuffled"></Table>
 </template>
 
 <style scoped>
-
 </style>
