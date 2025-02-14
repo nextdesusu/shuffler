@@ -8,11 +8,28 @@ const USER_COLUMN_INDEX = 4;
 const AUTHOR_COLUMN_INDEX = 1;
 const SONG_COLUMN_INDEX = 2;
 const SONGS_ROW_START_INDEX = 3;
-const SONGS_PER_USER = 15;
+const SONG_PER_USER_COUNT = {
+  column: 5,
+  row: 1,
+  default: 15,
+}
+
+function getSongsPerUser(data: RawParsedData) {
+  try {
+    const n = parseInt(data[SONG_PER_USER_COUNT.row][SONG_PER_USER_COUNT.column], 10);
+    if (typeof n !== 'number' || Number.isNaN(n) || n <= 0) {
+      return SONG_PER_USER_COUNT.default;
+    }
+    return n;
+  } catch {
+    return SONG_PER_USER_COUNT.default;
+  }
+}
 
 export async function parseData(file: File): Promise<SongTable> {
   const parsed = await parseCSV(file);
   const users: string[] = [];
+  const songsPerUser = getSongsPerUser(parsed);
 
   const userSong: SongTable = [];
 
@@ -33,7 +50,7 @@ export async function parseData(file: File): Promise<SongTable> {
       songs: [],
     }
 
-    for (let i = 0; i < SONGS_PER_USER; i++) {
+    for (let i = 0; i < songsPerUser; i++) {
       const idx = globalIndexShift + i;
       const row = parsed[idx];
       const author = row[AUTHOR_COLUMN_INDEX];
@@ -49,9 +66,11 @@ export async function parseData(file: File): Promise<SongTable> {
       });
     }
 
-    globalIndexShift += SONGS_PER_USER;
+    globalIndexShift += songsPerUser;
 
-    userSong.push(currentUser);
+    if (currentUser.songs.length > 0) {
+      userSong.push(currentUser);
+    }
   }
 
   return userSong;
